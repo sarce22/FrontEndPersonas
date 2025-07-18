@@ -5,9 +5,9 @@ import { useAuth } from '../../context/AuthContext';
 const Register = () => {
   const [formData, setFormData] = useState({
     nombre: '',
-    email: '',
-    password: '',
-    confirmPassword: ''
+    correo: '',
+    contraseña: '',
+    confirmContraseña: ''
   });
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
@@ -35,7 +35,7 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    if (!formData.nombre || !formData.email || !formData.password || !formData.confirmPassword) {
+    if (!formData.nombre || !formData.correo || !formData.contraseña || !formData.confirmContraseña) {
       setError('Todos los campos son requeridos');
       return false;
     }
@@ -45,19 +45,19 @@ const Register = () => {
       return false;
     }
 
-    if (formData.password.length < 3) {
+    if (formData.contraseña.length < 3) {
       setError('La contraseña debe tener al menos 3 caracteres');
       return false;
     }
 
-    if (formData.password !== formData.confirmPassword) {
+    if (formData.contraseña !== formData.confirmContraseña) {
       setError('Las contraseñas no coinciden');
       return false;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(formData.email)) {
-      setError('Ingresa un email válido');
+    const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!correoRegex.test(formData.correo)) {
+      setError('Ingresa un correo válido');
       return false;
     }
 
@@ -78,17 +78,17 @@ const Register = () => {
     try {
       const result = await register({
         nombre: formData.nombre,
-        email: formData.email,
-        password: formData.password
+        correo: formData.correo,
+        contraseña: formData.contraseña
       });
 
       if (result.success) {
         setSuccess('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
         setFormData({
           nombre: '',
-          email: '',
-          password: '',
-          confirmPassword: ''
+          correo: '',
+          contraseña: '',
+          confirmContraseña: ''
         });
         
         // Redirigir al login después de 2 segundos
@@ -165,18 +165,18 @@ const Register = () => {
             </div>
 
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+              <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
+                correo
               </label>
               <input
-                id="email"
-                name="email"
-                type="email"
-                autoComplete="email"
+                id="correo"
+                name="correo"
+                type="correo"
+                autoComplete="correo"
                 required
                 className="input-field mt-1"
-                placeholder="tu@email.com"
-                value={formData.email}
+                placeholder="tu@correo.com"
+                value={formData.correo}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
@@ -187,14 +187,14 @@ const Register = () => {
                 Contraseña
               </label>
               <input
-                id="password"
-                name="password"
+                id="contraseña"
+                name="contraseña"
                 type="password"
                 autoComplete="new-password"
                 required
                 className="input-field mt-1"
                 placeholder="Mínimo 3 caracteres"
-                value={formData.password}
+                value={formData.contraseña}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
@@ -205,8 +205,8 @@ const Register = () => {
                 Confirmar contraseña
               </label>
               <input
-                id="confirmPassword"
-                name="confirmPassword"
+                id="confirmContraseña"
+                name="confirmContraseña"
                 type="password"
                 autoComplete="new-password"
                 required

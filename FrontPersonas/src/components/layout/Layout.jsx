@@ -16,7 +16,7 @@ const Layout = ({ children }) => {
   const navigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
     { name: 'Personas', href: '/personas', icon: '👥' },
-    { name: 'Usuarios', href: '/usuarios', icon: '👤' },
+    
   ];
 
   const isActivePath = (path) => {
@@ -115,7 +115,7 @@ const Layout = ({ children }) => {
             <div className="pt-4 pb-3 border-t border-gray-200">
               <div className="flex items-center px-4">
                 <div className="text-base font-medium text-gray-800">{user?.nombre}</div>
-                <div className="text-sm text-gray-500">{user?.email}</div>
+                <div className="text-sm text-gray-500">{user?.correo}</div>
               </div>
               <div className="mt-3 space-y-1">
                 <button

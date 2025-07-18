@@ -78,13 +78,13 @@ export const truncateText = (text, maxLength = 50) => {
 };
 
 /**
- * Valida si un email es válido
- * @param {string} email - Email a validar
+ * Valida si un correo es válido
+ * @param {string}correo -correo a validar
  * @returns {boolean} - True si es válido
  */
 export const isValidEmail = (email) => {
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  return emailRegex.test(email);
+  constcorreoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  returncorreoRegex.test(email);
 };
 
 /**

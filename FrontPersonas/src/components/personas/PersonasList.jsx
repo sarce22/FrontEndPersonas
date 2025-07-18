@@ -205,7 +205,7 @@ const PersonasList = () => {
                             {persona.nombre} {persona.apellido}
                           </div>
                           <div className="text-sm text-gray-500">
-                            {persona.email}
+                            {persona.correo}
                           </div>
                         </div>
                       </div>

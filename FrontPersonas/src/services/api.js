@@ -30,7 +30,7 @@ export const authService = {
 
   // Iniciar sesión
   login: async (credentials) => {
-    const response = await api.post('/personas/login', credentials);
+    const response = await api.post('/auth/login', credentials);
     return response.data;
   },
 

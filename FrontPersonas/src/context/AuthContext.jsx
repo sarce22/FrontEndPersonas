@@ -51,14 +51,14 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  const login = async (email, password) => {
+  const login = async (correo, contraseña) => {
     try {
       setIsLoading(true);
-      const response = await authService.login({ email, password });
+      const response = await authService.login({ correo, contraseña });
       
       if (response.success) {
         const userData = response.data.user;
-        const credentials = { email, password };
+        const credentials = { correo, contraseña };
         
         // Guardar en localStorage
         localStorage.setItem('user', JSON.stringify(userData));

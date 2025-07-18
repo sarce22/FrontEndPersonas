@@ -4,8 +4,8 @@ import { useAuth } from '../../context/AuthContext';
 
 const Login = () => {
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    correo: '',
+    contraseña: ''
   });
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -38,15 +38,16 @@ const Login = () => {
     setIsSubmitting(true);
 
     // Validaciones básicas
-    if (!formData.email || !formData.password) {
+    if (!formData.correo || !formData.contraseña) {
       setError('Todos los campos son requeridos');
       setIsSubmitting(false);
       return;
     }
 
     try {
-      const result = await login(formData.email, formData.password);
-      
+      console.log('Datos enviados:', formData);
+      const result = await login(formData.correo, formData.contraseña);
+
       if (result.success) {
         const from = location.state?.from?.pathname || '/dashboard';
         navigate(from, { replace: true });
@@ -96,18 +97,18 @@ const Login = () => {
 
           <div className="space-y-4">
             <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email
+              <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
+                correo
               </label>
               <input
-                id="email"
-                name="email"
+                id="correo"
+                name="correo"
                 type="email"
-                autoComplete="email"
+                autoComplete="correo"
                 required
                 className="input-field mt-1"
-                placeholder="tu@email.com"
-                value={formData.email}
+                placeholder="tu@correo.com"
+                value={formData.correo}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
@@ -118,17 +119,18 @@ const Login = () => {
                 Contraseña
               </label>
               <input
-                id="password"
-                name="password"
+                id="contraseña"
+                name="contraseña"
                 type="password"
                 autoComplete="current-password"
                 required
                 className="input-field mt-1"
                 placeholder="Tu contraseña"
-                value={formData.password}
+                value={formData.contraseña}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
+            
             </div>
           </div>
 
@@ -159,5 +161,7 @@ const Login = () => {
     </div>
   );
 };
+
+
 
 export default Login;

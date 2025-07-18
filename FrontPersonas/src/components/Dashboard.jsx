@@ -6,7 +6,7 @@ import { personasService, authService, generalService } from '../services/api';
 const Dashboard = () => {
   const { user } = useAuth();
   const [stats, setStats] = useState(null);
-  const [users, setUsers] = useState([]);
+  
   const [recentPersonas, setRecentPersonas] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -27,10 +27,7 @@ const Dashboard = () => {
       }
 
       // Cargar usuarios registrados
-      const usersResponse = await authService.getUsers();
-      if (usersResponse.success) {
-        setUsers(usersResponse.data.users || []);
-      }
+     
 
       // Cargar personas recientes
       const personasResponse = await personasService.getAll();
@@ -158,25 +155,7 @@ const Dashboard = () => {
           </div>
         </div>
 
-        <div className="card">
-          <div className="flex items-center">
-            <div className="flex-shrink-0">
-              <div className="w-8 h-8 bg-purple-500 rounded-md flex items-center justify-center">
-                <span className="text-white text-sm font-medium">👤</span>
-              </div>
-            </div>
-            <div className="ml-5 w-0 flex-1">
-              <dl>
-                <dt className="text-sm font-medium text-gray-500 truncate">
-                  Usuarios
-                </dt>
-                <dd className="text-2xl font-semibold text-gray-900">
-                  {users.length}
-                </dd>
-              </dl>
-            </div>
-          </div>
-        </div>
+        
       </div>
 
       {/* Acciones rápidas */}
@@ -228,28 +207,6 @@ const Dashboard = () => {
               </p>
             </div>
           </Link>
-
-          <Link
-            to="/usuarios"
-            className="relative group bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-blue-500 border border-gray-200 rounded-lg hover:border-gray-300 transition-colors duration-200"
-          >
-            <div>
-              <span className="rounded-lg inline-flex p-3 bg-purple-50 text-purple-600 ring-4 ring-white">
-                <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0z" />
-                </svg>
-              </span>
-            </div>
-            <div className="mt-8">
-              <h3 className="text-lg font-medium">
-                <span className="absolute inset-0" aria-hidden="true" />
-                Ver Usuarios
-              </h3>
-              <p className="mt-2 text-sm text-gray-500">
-                Administrar usuarios del sistema
-              </p>
-            </div>
-          </Link>
         </div>
       </div>
 
@@ -281,7 +238,7 @@ const Dashboard = () => {
                         {persona.nombre} {persona.apellido}
                       </p>
                       <p className="text-sm text-gray-500 truncate">
-                        {persona.email}
+                        {persona.correo}
                       </p>
                     </div>
                     <div className="text-sm text-gray-500">
