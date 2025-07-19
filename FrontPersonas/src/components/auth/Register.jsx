@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 const Register = () => {
   const [formData, setFormData] = useState({
     nombre: '',
+    apellido: '',  // ✅ AGREGADO
     correo: '',
     contraseña: '',
     confirmContraseña: ''
@@ -35,29 +36,40 @@ const Register = () => {
   };
 
   const validateForm = () => {
-    if (!formData.nombre || !formData.correo || !formData.contraseña || !formData.confirmContraseña) {
+    // Validar que todos los campos están llenos
+    if (!formData.nombre || !formData.apellido || !formData.correo || !formData.contraseña || !formData.confirmContraseña) {
       setError('Todos los campos son requeridos');
       return false;
     }
 
+    // Validar nombre
     if (formData.nombre.length < 2) {
       setError('El nombre debe tener al menos 2 caracteres');
       return false;
     }
 
-    if (formData.contraseña.length < 3) {
-      setError('La contraseña debe tener al menos 3 caracteres');
+    // ✅ Validar apellido
+    if (formData.apellido.length < 2) {
+      setError('El apellido debe tener al menos 2 caracteres');
       return false;
     }
 
-    if (formData.contraseña !== formData.confirmContraseña) {
-      setError('Las contraseñas no coinciden');
-      return false;
-    }
-
+    // Validar correo
     const correoRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!correoRegex.test(formData.correo)) {
       setError('Ingresa un correo válido');
+      return false;
+    }
+
+    // Validar contraseña
+    if (formData.contraseña.length < 6) {
+      setError('La contraseña debe tener al menos 6 caracteres');
+      return false;
+    }
+
+    // Validar confirmación
+    if (formData.contraseña !== formData.confirmContraseña) {
+      setError('Las contraseñas no coinciden');
       return false;
     }
 
@@ -78,14 +90,17 @@ const Register = () => {
     try {
       const result = await register({
         nombre: formData.nombre,
+        apellido: formData.apellido,  // ✅ AGREGADO
         correo: formData.correo,
-        contraseña: formData.contraseña
+        contraseña: formData.contraseña,
+        rol_id: 2  // Por defecto cliente
       });
 
       if (result.success) {
         setSuccess('Usuario registrado exitosamente. Ahora puedes iniciar sesión.');
         setFormData({
           nombre: '',
+          apellido: '',  // ✅ AGREGADO
           correo: '',
           contraseña: '',
           confirmContraseña: ''
@@ -100,16 +115,20 @@ const Register = () => {
       }
     } catch (error) {
       setError('Error inesperado. Inténtalo de nuevo.');
+      console.error('Error en registro:', error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
-  // Mostrar loading si está verificando sesión
+  // Mostrar loading mientras verifica autenticación
   if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-gray-50">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Verificando...</p>
+        </div>
       </div>
     );
   }
@@ -118,63 +137,108 @@ const Register = () => {
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8">
         <div>
+          <div className="mx-auto h-12 w-12 flex items-center justify-center bg-blue-600 rounded-lg">
+            <span className="text-white text-xl font-bold">👥</span>
+          </div>
           <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Crear Cuenta
+            Crear cuenta nueva
           </h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             O{' '}
             <Link
               to="/login"
-              className="font-medium text-blue-600 hover:text-blue-500"
+              className="font-medium text-blue-600 hover:text-blue-500 transition-colors duration-200"
             >
-              inicia sesión aquí
+              inicia sesión con tu cuenta existente
             </Link>
           </p>
         </div>
 
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+          {/* Mensajes de error y éxito */}
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
-              {error}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm">{error}</p>
+                </div>
+              </div>
             </div>
           )}
 
           {success && (
             <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
-              {success}
+              <div className="flex">
+                <div className="flex-shrink-0">
+                  <svg className="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" />
+                  </svg>
+                </div>
+                <div className="ml-3">
+                  <p className="text-sm">{success}</p>
+                </div>
+              </div>
             </div>
           )}
 
+          {/* Campos del formulario */}
           <div className="space-y-4">
-            <div>
-              <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">
-                Nombre completo
-              </label>
-              <input
-                id="nombre"
-                name="nombre"
-                type="text"
-                autoComplete="name"
-                required
-                className="input-field mt-1"
-                placeholder="Tu nombre completo"
-                value={formData.nombre}
-                onChange={handleChange}
-                disabled={isSubmitting}
-              />
+            {/* Nombre y Apellido en una fila */}
+            <div className="grid grid-cols-1 gap-4" style={{ gridTemplateColumns: 'repeat(2, 1fr)' }}>
+              <div>
+                <label htmlFor="nombre" className="block text-sm font-medium text-gray-700 mb-1">
+                  Nombre <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="nombre"
+                  name="nombre"
+                  type="text"
+                  autoComplete="given-name"
+                  required
+                  className="input-field"
+                  placeholder="Tu nombre"
+                  value={formData.nombre}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                />
+              </div>
+
+              <div>
+                <label htmlFor="apellido" className="block text-sm font-medium text-gray-700 mb-1">
+                  Apellido <span className="text-red-500">*</span>
+                </label>
+                <input
+                  id="apellido"
+                  name="apellido"
+                  type="text"
+                  autoComplete="family-name"
+                  required
+                  className="input-field"
+                  placeholder="Tu apellido"
+                  value={formData.apellido}
+                  onChange={handleChange}
+                  disabled={isSubmitting}
+                />
+              </div>
             </div>
 
+            {/* Correo */}
             <div>
-              <label htmlFor="correo" className="block text-sm font-medium text-gray-700">
-                correo
+              <label htmlFor="correo" className="block text-sm font-medium text-gray-700 mb-1">
+                Correo Electrónico <span className="text-red-500">*</span>
               </label>
               <input
                 id="correo"
                 name="correo"
-                type="correo"
-                autoComplete="correo"
+                type="email"
+                autoComplete="email"
                 required
-                className="input-field mt-1"
+                className="input-field"
                 placeholder="tu@correo.com"
                 value={formData.correo}
                 onChange={handleChange}
@@ -182,9 +246,10 @@ const Register = () => {
               />
             </div>
 
+            {/* Contraseña */}
             <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Contraseña
+              <label htmlFor="contraseña" className="block text-sm font-medium text-gray-700 mb-1">
+                Contraseña <span className="text-red-500">*</span>
               </label>
               <input
                 id="contraseña"
@@ -192,17 +257,18 @@ const Register = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="input-field mt-1"
-                placeholder="Mínimo 3 caracteres"
+                className="input-field"
+                placeholder="Mínimo 6 caracteres"
                 value={formData.contraseña}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
             </div>
 
+            {/* Confirmar Contraseña */}
             <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirmar contraseña
+              <label htmlFor="confirmContraseña" className="block text-sm font-medium text-gray-700 mb-1">
+                Confirmar Contraseña <span className="text-red-500">*</span>
               </label>
               <input
                 id="confirmContraseña"
@@ -210,30 +276,39 @@ const Register = () => {
                 type="password"
                 autoComplete="new-password"
                 required
-                className="input-field mt-1"
+                className="input-field"
                 placeholder="Repite tu contraseña"
-                value={formData.confirmPassword}
+                value={formData.confirmContraseña}
                 onChange={handleChange}
                 disabled={isSubmitting}
               />
             </div>
           </div>
 
+          {/* Botón de envío */}
           <div>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="group relative w-full flex justify-center py-3 px-4 border border-transparent text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors duration-200"
+              className="btn-primary w-full"
+              style={{ padding: '0.75rem 1rem', fontSize: '1rem' }}
             >
               {isSubmitting ? (
-                <div className="flex items-center">
-                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                <div className="flex items-center justify-center">
+                  <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
                   Registrando...
                 </div>
               ) : (
-                'Crear Cuenta'
+                'Crear cuenta'
               )}
             </button>
+          </div>
+
+          {/* Información adicional */}
+          <div className="text-center">
+            <p className="text-xs text-gray-500">
+              Al registrarte, aceptas nuestros términos de servicio y política de privacidad.
+            </p>
           </div>
         </form>
       </div>

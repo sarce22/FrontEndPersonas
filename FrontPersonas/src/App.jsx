@@ -1,3 +1,4 @@
+// FrontPersonas/src/App.jsx
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
@@ -56,7 +57,7 @@ function App() {
               </ProtectedRoute>
             } />
             
-            {/* Rutas de personas */}
+            {/* Rutas de personas - La validación de roles se hace dentro del componente */}
             <Route path="/personas" element={
               <ProtectedRoute>
                 <Layout>

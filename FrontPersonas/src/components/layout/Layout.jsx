@@ -13,11 +13,18 @@ const Layout = ({ children }) => {
     navigate('/login');
   };
 
-  const navigation = [
+  // Verificar si es administrador
+  const isAdmin = user && (user.rol === '1' || user.rol === 1);
+
+  // Navegación base
+  const baseNavigation = [
     { name: 'Dashboard', href: '/dashboard', icon: '📊' },
-    { name: 'Personas', href: '/personas', icon: '👥' },
-    
   ];
+
+  // Agregar "Personas" solo si es administrador
+  const navigation = isAdmin 
+    ? [...baseNavigation, { name: 'Personas', href: '/personas', icon: '👥' }]
+    : baseNavigation;
 
   const isActivePath = (path) => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
@@ -61,6 +68,9 @@ const Layout = ({ children }) => {
               <div className="flex items-center space-x-4">
                 <span className="text-sm text-gray-700">
                   Hola, <span className="font-medium">{user?.nombre}</span>
+                  <span className="text-xs text-gray-500 ml-1">
+                    ({isAdmin ? 'Admin' : 'Usuario'})
+                  </span>
                 </span>
                 <button
                   onClick={handleLogout}

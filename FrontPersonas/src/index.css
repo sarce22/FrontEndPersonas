@@ -49,7 +49,7 @@ body {
 }
 
 .btn-secondary {
-  background-color: #6b7280;
+  background-color: #0f3072;
   color: white;
   font-weight: 500;
   padding: 0.5rem 1rem;
@@ -68,6 +68,8 @@ body {
 .btn-secondary:hover:not(:disabled) {
   background-color: #4b5563;
 }
+
+
 
 .btn-danger {
   background-color: #dc2626;
